@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        form {
+            max-width: 600px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        label {
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Fill your Details</h2>
+
+<form th:action="@{/submit-reservation}" th:object="${reservation}" method="post">
+
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" th:field="*{customer.firstName}"
+               pattern="[A-Za-z]{2,30}"
+               title="First name must be 2-30 letters"
+               required>
+    </div>
+
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" th:field="*{customer.lastName}"
+               pattern="[A-Za-z]{2,30}"
+               title="Last name must be 2-30 letters"
+               required>
+    </div>
+
+    <div>
+        <label for="phoneNumber">Phone Number:</label>
+        <input type="tel" id="phoneNumber" th:field="*{customer.phoneNumber}"
+               pattern="[1-9][0-9]{2}-[0-9]{3}-[0-9]{4}"
+               title="Format: XXX-XXX-XXXX (area code cannot start with 0)"
+               required>
+    </div>
+
+    <div>
+        <label for="numberOfPassengers">Number of Passengers:</label>
+        <input type="number" id="numberOfPassengers" th:field="*{airlineTicket.numberOfPassengers}"
+               min="1"
+               required>
+    </div>
+
+    <div>
+        <label for="travelClass">Class of Travel:</label>
+        <select id="travelClass" th:field="*{airlineTicket.travelClass}" required>
+            <option value="">Select Class</option>
+            <option value="Economy">Economy</option>
+            <option value="Business">Business</option>
+        </select>
+    </div>
+
+    <div>
+        <label>Date of Departure:</label>
+
+        <select th:field="*{day}" required>
+            <option value="">Day</option>
+            <option th:each="d : ${#numbers.sequence(1, 31)}"
+                    th:value="${d}" th:text="${d}"></option>
+        </select>
+
+        <select th:field="*{month}" required>
+            <option value="">Month</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+
+        <select th:field="*{year}" required>
+            <option value="">Year</option>
+            <option th:each="y : ${#numbers.sequence(2024, 2030)}"
+                    th:value="${y}" th:text="${y}"></option>
+        </select>
+    </div>
+
+    <button type="submit">Submit</button>
+</form>
+<form th:action="@{/submit-static-json}" method="post">
+    <button type="submit">Submit Static JSON</button>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "dateOfDeparture": "2025-04-14",
+  "airlineTicket": {
+    "numberOfPassengers": 3,
+    "travelClass": "Economy"
+  },
+  "customer": {
+    "firstName": "Alice",
+    "lastName": "Nguyen",
+    "phoneNumber": "416-555-1234"
+  }
+}

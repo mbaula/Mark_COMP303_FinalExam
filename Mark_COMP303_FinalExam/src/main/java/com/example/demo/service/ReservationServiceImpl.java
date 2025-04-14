@@ -11,6 +11,8 @@ import com.example.demo.model.Reservation;
 import com.example.demo.repository.AirlineTicketRepository;
 import com.example.demo.repository.CustomerRepository;
 import com.example.demo.repository.ReservationRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -22,9 +24,29 @@ public class ReservationServiceImpl implements ReservationService {
 
 	@Autowired
 	private AirlineTicketRepository ticketRepository;
-
+	
+	@Autowired
+    private ObjectMapper objectMapper;
+	
+	// We manually use Jackson’s ObjectMapper to log and verify serialization/deserialization
+    // Though Spring Boot auto-handles JSON mapping, this shows explicit Jackson usage
+    // Demonstrates full Jackson cycle: Java → JSON → Java
+	// https://docs.spring.io/spring-boot/reference/features/json.html
 	@Override
     public Reservation saveReservationWithEntities(Reservation reservation) {
+		// Manually log Jackson serialization 
+        try {
+            String incomingJson = objectMapper.writeValueAsString(reservation);
+            System.out.println("=== Incoming Reservation (Serialized by Jackson) ===");
+            System.out.println(incomingJson);
+
+            Reservation parsed = objectMapper.readValue(incomingJson, Reservation.class);
+            System.out.println("=== Deserialized Object (Jackson again) ===");
+            System.out.println("Parsed Customer: " + parsed.getCustomer().getFirstName());
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        
         AirlineTicket ticket = reservation.getAirlineTicket();
         ticket.setTicketNumber("HT" + (int) (Math.random() * 1_000_00000));
         double unit = 100 + Math.random() * 100;
